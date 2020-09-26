@@ -1,0 +1,10 @@
+{
+    "arrowParents": "always",
+    "orderedImports": true,
+    "printWidth": 80,
+    "singLeQuote": true,
+    "semi": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
+}
