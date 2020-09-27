@@ -1,59 +1,71 @@
 import React from "react";
 import { Button } from 'antd';
+import PropTypes from "prop-types";
+import ThemedButton from 'ThemedButton';
 import "App.css";
 
-const actions = {
-  init(initialValue) {
-    return { value: initialValue }
-  },
-  increment(prevState) {
-    return { value: prevState.value + 1 }
-  },
-  decrement(prevState) {
-    return { value: prevState.value - 1 }
+class PostDetail extends React.Component {
+  static propTypes = {
+    postId: PropTypes.number.isRequired,
   }
-};
 
-class Counter1 extends React.Component {
-  state = actions.init(this.props.initialValue);
+  state = {
+    postDetail: null
+  }
+
+  componentDidMount() {
+    const { postId } = this.props;
+    this.requestPost(postId);
+  }
+  
+  componentDidUpdate(prevProps) {
+    const { postId } = this.props;
+    if ( postId !== prevProps.postId ) {
+      this.requestPost(postId);
+    }
+  }
+
+  requestPost(postId) {
+    console.log(`request post #${postId}`);
+    this.setState({
+      postDetail: null
+    });
+    setTimeout(() => {
+      this.setState({
+        postDetail: `로딩된 post #${postId}`
+      });
+    }, 3000);
+  }
 
   render() {
-    const { value } = this.state;
+    const { postId } = this.props;
+    const { postDetail } = this.state;
     return (
       <div>
-        Counter1: {value}
-        <Button onClick={() => this.setState(actions.increment)}>+1</Button>
-        <Button onClick={() => this.setState(actions.decrement)}>-1</Button>
+        포스팅#{postId}
+        <hr />
+        {!postDetail && "로딩 중 ..."}
+        {postDetail}
       </div>
     );
   }
 }
 
-class FruitComponent extends React.Component {
-  render () {
+class App extends React.Component {
+  state = {
+    postId: 10
+  }
+  render() {
     return (
       <div>
-        <h1>fruits</h1>
-        <ul>
-          {
-            this.props.fruits.map((name, index) => (
-              <li key={index}>{name}</li>
-            ))
-          }
-        </ul>
+        <ThemedButton theme="success" label="Say Hello" />
+        <PostDetail postId={this.state.postId} />
+        <button onClick={() => this.setState({ postId: 20 })}>
+          postID 변경
+        </button>
       </div>
-    );
+    ); 
   }
-}
-
-function App() {
-  const fruits = ["apple", "mango", "pineapple"];
-  return (
-    <div>
-      <Counter1 initialValue={10} />
-      <FruitComponent fruits={fruits} />
-    </div>
-  );
 }
 
 export default App;
